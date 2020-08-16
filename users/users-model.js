@@ -3,16 +3,16 @@ const db = require("../database/connection.js");
 module.exports = {
   add,
   find,
-  findBy,
+  findByUsername,
   findById,
 };
 
 function find() {
-  return db("users").select("id", "username").orderBy("id");
+  return db("users").select("id", "username", "password").orderBy("id");
 }
 
-function findBy(filter) {
-  return db("users").where(filter).orderBy("id");
+function findByUsername(username, password) {
+  return db("users").where({ username: username }).orderBy("id");
 }
 
 async function add(user) {
