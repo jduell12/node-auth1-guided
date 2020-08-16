@@ -10,6 +10,7 @@ const sessionConfig = {
   name: "monkey",
   secret: "keep it secret, keep it safe!",
   cookie: {
+    //30 seconds - 1000 is 1 second since maxAge is in ms
     maxAge: 1000 * 30,
     secure: false, //ok in development but want true in production
     httpOnly: true, //can't be accessed from JS
