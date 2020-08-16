@@ -2,17 +2,14 @@ const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const Users = require("./users-model.js");
 const session = require("express-session");
+const middleware = require("./restricted-middleware");
 
-router.get("/", (req, res) => {
-  if (req.session && req.session.user) {
-    Users.find()
-      .then((users) => {
-        res.status(200).json(users);
-      })
-      .catch((err) => res.send(err));
-  } else {
-    res.status(401).json({ message: "Invalid credentials" });
-  }
+router.get("/", middleware, (req, res) => {
+  Users.find()
+    .then((users) => {
+      res.status(200).json(users);
+    })
+    .catch((err) => res.send(err));
 });
 
 router.post("/register", (req, res) => {
