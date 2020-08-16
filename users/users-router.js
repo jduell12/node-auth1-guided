@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const Users = require("./users-model.js");
+const session = require("express-session");
 
 router.get("/", (req, res) => {
   if (req.session && req.session.user) {
@@ -49,6 +50,20 @@ router.post("/login", (req, res) => {
       console.log(err);
       res.status(500).json({ err });
     });
+});
+
+router.get("/logout", (req, res) => {
+  if (req.session && req.session.user) {
+    req.session.destroy((err) => {
+      if (err) {
+        res.status(400).json({ err });
+      } else {
+        res.status(200).json({ logout: "successful" });
+      }
+    });
+  } else {
+    res.status(200).json({ message: "No session" });
+  }
 });
 
 module.exports = router;
