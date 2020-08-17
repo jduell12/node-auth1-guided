@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const config = require("../config/secrets");
 
 const Users = require("../users/users-model.js");
 
@@ -63,7 +64,7 @@ function generateToken(user) {
     //no sensitive data should be in token
   };
 
-  const secret = "fdljksdljfsdkfslfdjlsfdjlkfsj";
+  const secret = config.jwtSecret;
 
   const options = {
     expiresIn: "8h",
