@@ -27,7 +27,7 @@ router.post("/login", (req, res) => {
     .then(([user]) => {
       //password and then the hash - needs to be in order
       if (user && bcrypt.compareSync(password, user.password)) {
-        res.status(200).json({ message: "logged in" });
+        res.status(200).json({ message: "logged in", session: req.session });
       } else {
         res.status(401).json({ message: "Invalid credentials" });
       }
