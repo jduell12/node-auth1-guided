@@ -27,6 +27,7 @@ router.post("/login", (req, res) => {
     .then(([user]) => {
       //password and then the hash - needs to be in order
       if (user && bcrypt.compareSync(password, user.password)) {
+        req.session.loggedIn = true;
         res.status(200).json({ message: "logged in", session: req.session });
       } else {
         res.status(401).json({ message: "Invalid credentials" });
@@ -35,6 +36,11 @@ router.post("/login", (req, res) => {
     .catch((err) => {
       res.status(500).json({ error: err.message });
     });
+});
+
+router.get("/logout", (req, res) => {
+  req.session.loggedIn = false;
+  res.status(200).json({ message: "logged out successfully" });
 });
 
 module.exports = router;
