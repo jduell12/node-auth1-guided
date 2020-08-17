@@ -31,7 +31,7 @@ router.post("/login", (req, res) => {
         const token = generateToken(user);
 
         req.session.loggedIn = true;
-        res.status(200).json({ message: "logged in", session: req.session });
+        res.status(200).json({ message: "logged in", token });
       } else {
         res.status(401).json({ message: "Invalid credentials" });
       }
@@ -65,7 +65,9 @@ function generateToken(user) {
 
   const secret = "fdljksdljfsdkfslfdjlsfdjlkfsj";
 
-  const options = {};
+  const options = {
+    expiresIn: "8h",
+  };
 
   return jwt.sign(payload, secret, options);
 }
