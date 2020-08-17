@@ -7,6 +7,7 @@ const usersRouter = require("../users/users-router.js");
 const authRouter = require("../auth/auth-router");
 const protected = require("../auth/protected");
 const session = require("express-session");
+const KnexSessionStore = require("connect-session-knex")(session);
 
 const server = express();
 
@@ -14,8 +15,12 @@ const sessionConfig = {
   name: "monster",
   secret: "Super secret secret",
   resave: false,
-  saveUninitialized: true,
-  cookie: { maxAge: 30000 },
+  saveUninitialized: false, //GDPR compliance - ask user if they want cookies or not if true
+  cookie: {
+    maxAge: 1000 * 30, //30 seconds
+    secure: process.env.COOKIE_SECURE || false, //if true cookie is only sent over https
+    httpOnly: true, //JS can't touch the cookie
+  },
 };
 
 server.use(helmet());
