@@ -25,9 +25,11 @@ router.post("/login", (req, res) => {
 
   Users.findBy({ username })
     .then(([user]) => {
-      if (user) {
+      //password and then the hash - needs to be in order
+      if (user && bcrypt.compareSync(password, user.password)) {
+        res.status(200).json({ message: "logged in" });
       } else {
-        res.status(401).json({ message: "Could not find username" });
+        res.status(401).json({ message: "Invalid credentials" });
       }
     })
     .catch((err) => {
