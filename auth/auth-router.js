@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const Users = require("../users/users-model.js");
 
@@ -27,6 +28,8 @@ router.post("/login", (req, res) => {
     .then(([user]) => {
       //password and then the hash - needs to be in order
       if (user && bcrypt.compareSync(password, user.password)) {
+        const token = generateToken(user);
+
         req.session.loggedIn = true;
         res.status(200).json({ message: "logged in", session: req.session });
       } else {
@@ -51,5 +54,20 @@ router.get("/logout", (req, res) => {
     res.status(200).json({ message: "you were not logged in" });
   }
 });
+
+function generateToken(user) {
+  const payload = {
+    subject: user.id,
+    username: user.username,
+    //any other data to store in token that goes back to the client
+    //no sensitive data should be in token
+  };
+
+  const secret = "fdljksdljfsdkfslfdjlsfdjlkfsj";
+
+  const options = {};
+
+  return jwt.sign(payload, secret, options);
+}
 
 module.exports = router;
