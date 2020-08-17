@@ -5,14 +5,25 @@ const bcrypt = require("bcryptjs");
 
 const usersRouter = require("../users/users-router.js");
 const authRouter = require("../auth/auth-router");
+const protected = require("../auth/protected");
+const session = require("express-session");
 
 const server = express();
+
+const sessionConfig = {
+  name: "monster",
+  secret: "Super secret secret",
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 30000 },
+};
 
 server.use(helmet());
 server.use(express.json());
 server.use(cors());
+server.use(session(sessionConfig));
 
-server.use("/api/users", usersRouter);
+server.use("/api/users", protected, usersRouter);
 server.use("/api/auth", authRouter);
 
 server.get("/", (req, res) => {
