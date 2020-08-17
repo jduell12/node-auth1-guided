@@ -39,8 +39,17 @@ router.post("/login", (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  req.session.loggedIn = false;
-  res.status(200).json({ message: "logged out successfully" });
+  if (req.session && req.session.loggedIn) {
+    req.session.destroy((error) => {
+      if (error) {
+        res.status(500).json({ error: error.message });
+      } else {
+        res.status(200).json({ message: "logged out successfully" });
+      }
+    });
+  } else {
+    res.status(200).json({ message: "you were not logged in" });
+  }
 });
 
 module.exports = router;
